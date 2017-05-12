@@ -26,6 +26,7 @@ func main() {
 		log.Log("lvl", "error", "msg", "parsing configuration", "err", err)
 		os.Exit(1)
 	}
+	log.Log("lvl", "info", "msg", "server starting")
 
 	r := httprouter.New()
 	r.GET("/", httprouter.Handle(func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
