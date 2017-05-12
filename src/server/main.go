@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api"
 	"context"
 	"net/http"
 	"os"
@@ -30,7 +31,7 @@ func main() {
 
 	r := httprouter.New()
 	r.GET("/", httprouter.Handle(func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		write(w, map[string]interface{}{
+		api.Write(w, map[string]interface{}{
 			"name": "resistance",
 		})
 	}))
