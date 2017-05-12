@@ -19,25 +19,27 @@ import (
 type Configuration struct {
 	Bind     string
 	Database string
+	Secret   string
+	TokenTTL time.Duration
 }
 
 func main() {
-	log := log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout))
+	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout))
 
 	var c Configuration
 	err := envconfig.Process("resistance", &c)
 	if err != nil {
-		log.Log("lvl", "error", "msg", "parsing configuration", "err", err)
+		logger.Log("lvl", "error", "msg", "parsing configuration", "err", err)
 		os.Exit(1)
 	}
-	log.Log("lvl", "info", "msg", "server starting")
+	logger.Log("lvl", "info", "msg", "server starting")
 
 	db, err := sqlx.Connect("sqlite3", c.Database)
 	if err != nil {
-		log.Log("lvl", "error", "msg", "connecting to database", "err", err)
+		logger.Log("lvl", "error", "msg", "connecting to database", "err", err)
 		os.Exit(1)
 	}
-	log.Log("lvl", "info", "msg", "connected to database")
+	logger.Log("lvl", "info", "msg", "connected to database")
 
 	r := httprouter.New()
 	r.GET("/", httprouter.Handle(func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -45,6 +47,7 @@ func main() {
 			"name": "resistance",
 		})
 	}))
+	r.POST("/login", LoginHandler(logger, db, []byte(c.Secret), c.TokenTTL))
 
 	n := negroni.New()
 	n.UseHandler(r)
@@ -56,7 +59,7 @@ func main() {
 	go func() {
 		err := s.ListenAndServe()
 		if err != nil {
-			log.Log("lvl", "error", "msg", "listen error", "err", err)
+			logger.Log("lvl", "error", "msg", "listen error", "err", err)
 			os.Exit(1)
 		}
 	}()
@@ -68,5 +71,5 @@ func main() {
 	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	s.Shutdown(ctx)
 
-	log.Log("lvl", "info", "msg", "server stopping")
+	logger.Log("lvl", "info", "msg", "server stopping")
 }

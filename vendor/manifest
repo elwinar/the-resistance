@@ -2,6 +2,12 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/elwinar/token",
+			"repository": "https://github.com/elwinar/token",
+			"revision": "105e0dfa71f45c1a3277269d761e1c588349841e",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/go-kit/kit/log",
 			"repository": "https://github.com/go-kit/kit",
 			"revision": "d67bb4c202e3b91377d1079b110a6c9ce23ab2f8",

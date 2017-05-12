@@ -15,6 +15,13 @@ func Write(w http.ResponseWriter, p interface{}) error {
 	return nil
 }
 
+func WriteError(w http.ResponseWriter, status int, err error) error {
+	w.WriteHeader(status)
+	return Write(w, map[string]interface{}{
+		"error": err.Error(),
+	})
+}
+
 func Read(r *http.Request, p interface{}) error {
 	return json.NewDecoder(r.Body).Decode(p)
 }
