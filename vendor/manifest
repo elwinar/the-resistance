@@ -21,6 +21,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/jmoiron/sqlx",
+			"repository": "https://github.com/jmoiron/sqlx",
+			"revision": "d9bd385d68c068f1fabb5057e3dedcbcbb039d0f",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/julienschmidt/httprouter",
 			"repository": "https://github.com/julienschmidt/httprouter",
 			"revision": "975b5c4c7c21c0e3d2764200bf2aa8e34657ae6e",
@@ -33,10 +39,23 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/mattn/go-sqlite3",
+			"repository": "https://github.com/mattn/go-sqlite3",
+			"revision": "cf7286f069c3ef596efcc87781a4653a2e7607bd",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/urfave/negroni",
 			"repository": "https://github.com/urfave/negroni",
 			"revision": "1d8981a52d6bda4467a9faacf3fdddd38222dfc4",
 			"branch": "master"
+		},
+		{
+			"importpath": "golang.org/x/net/context",
+			"repository": "https://go.googlesource.com/net",
+			"revision": "c9b681d35165f1995d6f3034e61f8761d4b90c99",
+			"branch": "master",
+			"path": "/context"
 		}
 	]
 }

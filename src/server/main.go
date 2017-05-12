@@ -9,13 +9,16 @@ import (
 	"time"
 
 	"github.com/go-kit/kit/log"
+	"github.com/jmoiron/sqlx"
 	"github.com/julienschmidt/httprouter"
 	"github.com/kelseyhightower/envconfig"
+	_ "github.com/mattn/go-sqlite3"
 	"github.com/urfave/negroni"
 )
 
 type Configuration struct {
-	Bind string
+	Bind     string
+	Database string
 }
 
 func main() {
@@ -28,6 +31,13 @@ func main() {
 		os.Exit(1)
 	}
 	log.Log("lvl", "info", "msg", "server starting")
+
+	db, err := sqlx.Connect("sqlite3", c.Database)
+	if err != nil {
+		log.Log("lvl", "error", "msg", "connecting to database", "err", err)
+		os.Exit(1)
+	}
+	log.Log("lvl", "info", "msg", "connected to database")
 
 	r := httprouter.New()
 	r.GET("/", httprouter.Handle(func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {

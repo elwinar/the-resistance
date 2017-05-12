@@ -3,3 +3,4 @@ pkg
 vendor
 !vendor/manifest
 run.sh
+*.sqlite
