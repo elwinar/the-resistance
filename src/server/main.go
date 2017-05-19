@@ -50,6 +50,7 @@ func main() {
 	}))
 	r.POST("/login", LoginHandler(logger, db, []byte(c.Secret), c.TokenTTL))
 	r.POST("/authenticate", AuthenticateHandler(logger, db, []byte(c.Secret)))
+	r.GET("/game", ListGameHandler(logger, db))
 	r.POST("/game", CreateGameHandler(logger, db))
 	r.GET("/game/:id", ShowGameHandler(logger, db))
 
