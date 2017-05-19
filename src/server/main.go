@@ -51,6 +51,7 @@ func main() {
 	r.POST("/authenticate", AuthenticateHandler(logger, db, []byte(c.Secret)))
 
 	n := negroni.New()
+	n.Use(AuthenticateMiddleware(logger, db, []byte(c.Secret)))
 	n.UseHandler(r)
 
 	s := &http.Server{

@@ -14,7 +14,7 @@ func AuthenticateHandler(logger log.Logger, db *sqlx.DB, secret []byte) httprout
 	logger = log.With(logger, "handler", "authenticate")
 
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		claims, err := token.ParseHS256(r.Header.Get("token"), secret)
+		_, err := token.ParseHS256(r.Header.Get("token"), secret)
 		if err != nil {
 			api.Write(w, map[string]interface{}{
 				"authenticated": false,
@@ -23,7 +23,6 @@ func AuthenticateHandler(logger log.Logger, db *sqlx.DB, secret []byte) httprout
 		}
 
 		api.Write(w, map[string]interface{}{
-			"token":         r.Header.Get("token"),
 			"authenticated": true,
 		})
 	}
