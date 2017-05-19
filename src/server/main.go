@@ -13,6 +13,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/kelseyhightower/envconfig"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/rs/cors"
 	"github.com/urfave/negroni"
 )
 
@@ -49,8 +50,15 @@ func main() {
 	}))
 	r.POST("/login", LoginHandler(logger, db, []byte(c.Secret), c.TokenTTL))
 	r.POST("/authenticate", AuthenticateHandler(logger, db, []byte(c.Secret)))
+	r.POST("/game", CreateGameHandler(logger, db))
+	r.GET("/game/:id", ShowGameHandler(logger, db))
 
 	n := negroni.New()
+	n.Use(cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowCredentials: true,
+	}))
 	n.Use(AuthenticateMiddleware(logger, db, []byte(c.Secret)))
 	n.UseHandler(r)
 
