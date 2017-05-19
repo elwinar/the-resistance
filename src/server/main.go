@@ -48,6 +48,7 @@ func main() {
 		})
 	}))
 	r.POST("/login", LoginHandler(logger, db, []byte(c.Secret), c.TokenTTL))
+	r.POST("/authenticate", AuthenticateHandler(logger, db, []byte(c.Secret)))
 
 	n := negroni.New()
 	n.UseHandler(r)
