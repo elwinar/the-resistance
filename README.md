@@ -66,6 +66,8 @@ GET /game
 [
     {
         "id": 1,
+	"name": "foo",
+	"players": 5,
         "created_at": "2017-05-19T15:30:53.311021359+02:00",
         "started_at": null,
         "finished_at": null
@@ -85,6 +87,8 @@ GET /game/1
 
 {
     "id": 1,
+    "name": "foo",
+    "players": 5,
     "created_at": "2017-05-19T15:30:53.311021359+02:00",
     "started_at": null,
     "finished_at": null
@@ -94,6 +98,11 @@ GET /game/1
 
 ```
 POST /game
+
+{
+	"name": "foo",
+	"players": 5
+}
 ```
 
 ```
