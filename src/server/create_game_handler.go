@@ -14,7 +14,8 @@ import (
 
 func CreateGameHandler(db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		logger := log.With(Ctx(r).Logger, "handler", "create game")
+		ctx := Ctx(r)
+		logger := log.With(ctx.Logger, "handler", "create game")
 
 		var game Game
 		err := json.NewDecoder(r.Body).Decode(&game)
@@ -25,7 +26,8 @@ func CreateGameHandler(db *sqlx.DB) httprouter.Handle {
 		}
 
 		if game.Players < 5 || game.Players > 10 {
-			logger.Log("lvl", "error", "msg", "invalid number of players", "err", errors.New("invalid number of players (5 =< x <= 10)").Error())
+			err = errors.New("invalid number of players (5 =< x <= 10)")
+			logger.Log("lvl", "error", "msg", "invalid number of players", "err", err.Error())
 			api.WriteError(w, http.StatusBadRequest, err)
 			return
 		}

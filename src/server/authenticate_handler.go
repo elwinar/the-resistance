@@ -12,7 +12,8 @@ import (
 
 func AuthenticateHandler(db *sqlx.DB, secret []byte) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		logger := log.With(Ctx(r).Logger, "handler", "authenticate")
+		ctx := Ctx(r)
+		logger := log.With(ctx.Logger, "handler", "authenticate")
 
 		t := r.Header.Get("token")
 		_, err := token.ParseHS256(t, secret)

@@ -11,7 +11,8 @@ import (
 
 func ListGameHandler(db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		logger := log.With(Ctx(r).Logger, "handler", "list games")
+		ctx := Ctx(r)
+		logger := log.With(ctx.Logger, "handler", "list games")
 
 		var games []Game
 		err := db.Select(&games, "SELECT id, name, players, created_at, started_at, finished_at FROM game")

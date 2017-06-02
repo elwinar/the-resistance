@@ -1,5 +1,6 @@
 CREATE TABLE user (
-	login VARCHAR(50),
-	password VARCHAR(50),
+	id INTEGER PRIMARY KEY,
+	login VARCHAR(50) NOT NULL,
+	password VARCHAR(60) NOT NULL,
 	UNIQUE (login)
 );

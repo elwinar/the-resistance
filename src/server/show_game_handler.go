@@ -13,7 +13,8 @@ import (
 
 func ShowGameHandler(db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
-		logger := log.With(Ctx(r).Logger, "handler", "show game")
+		ctx := Ctx(r)
+		logger := log.With(ctx.Logger, "handler", "show game")
 
 		id, err := strconv.Atoi(p.ByName("id"))
 		if err != nil {
@@ -21,7 +22,7 @@ func ShowGameHandler(db *sqlx.DB) httprouter.Handle {
 			api.WriteError(w, http.StatusBadRequest, err)
 			return
 		}
-		logger = log.With(logger, "id", id)
+		logger = log.With(logger, "game", id)
 
 		var game Game
 		err = db.Get(&game, "SELECT id, name, players, created_at, started_at, finished_at FROM game WHERE id = ?", id)

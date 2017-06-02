@@ -10,6 +10,7 @@ import (
 // context enable request-associated data and structures to cross middelwares
 // and handlers boundaries.
 type Context struct {
+	UserID    uint64
 	RequestID string
 	Logger    log.Logger
 }

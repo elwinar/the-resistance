@@ -1,6 +1,8 @@
 CREATE TABLE game (
 	id INTEGER PRIMARY KEY,
-	created_at  DATETIME,
+	name VARCHAR(50) NOT NULL DEFAULT "",
+	players INTEGER UNSIGNED NOT NULL DEFAULT 5,
+	created_at  DATETIME NOT NULL DEFAULT (datetime('now','UTC')),
 	started_at  DATETIME,
 	finished_at DATETIME
 );
