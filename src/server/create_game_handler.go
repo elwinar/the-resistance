@@ -2,6 +2,7 @@ package main
 
 import (
 	"api"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -14,7 +15,15 @@ func CreateGameHandler(db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		logger := log.With(Ctx(r).Logger, "handler", "create game")
 
-		res, err := db.Exec("INSERT INTO game (created_at) VALUES (?)", time.Now())
+		var game Game
+		err := json.NewDecoder(r.Body).Decode(&game)
+		if err != nil {
+			logger.Log("lvl", "error", "msg", "parsing payload", "err", err.Error())
+			api.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
+
+		res, err := db.Exec("INSERT INTO game (name, players, created_at) VALUES (?, ?, ?)", game.Name, game.Players, time.Now())
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "creating new game", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)
