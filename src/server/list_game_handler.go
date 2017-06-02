@@ -9,13 +9,14 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func ListGameHandler(logger log.Logger, db *sqlx.DB) httprouter.Handle {
-	logger = log.With(logger, "handler", "show game")
-
+func ListGameHandler(db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		logger := log.With(Ctx(r).Logger, "handler", "list games")
+
 		var games []Game
 		err := db.Select(&games, "SELECT id, created_at, started_at, finished_at FROM game")
 		if err != nil {
+			logger.Log("lvl", "error", "msg", "retrieving games list", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)
 			return
 		}

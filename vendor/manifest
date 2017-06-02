@@ -87,6 +87,12 @@
 			"branch": "master"
 		},
 		{
+			"importpath": "github.com/pborman/uuid",
+			"repository": "https://github.com/pborman/uuid",
+			"revision": "1b00554d822231195d1babd97ff4a781231955c9",
+			"branch": "master"
+		},
+		{
 			"importpath": "github.com/rs/cors",
 			"repository": "https://github.com/rs/cors",
 			"revision": "2d7dd2a10331137ae3f931ba08c21fd00cbf208d",

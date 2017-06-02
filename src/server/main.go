@@ -48,19 +48,26 @@ func main() {
 			"name": "resistance",
 		})
 	}))
-	r.POST("/login", LoginHandler(logger, db, []byte(c.Secret), c.TokenTTL))
-	r.POST("/authenticate", AuthenticateHandler(logger, db, []byte(c.Secret)))
-	r.GET("/game", ListGameHandler(logger, db))
-	r.POST("/game", CreateGameHandler(logger, db))
-	r.GET("/game/:id", ShowGameHandler(logger, db))
+	r.POST("/login", LoginHandler(db, []byte(c.Secret), c.TokenTTL))
+	r.POST("/authenticate", AuthenticateHandler(db, []byte(c.Secret)))
+	r.GET("/game", ListGameHandler(db))
+	r.POST("/game", CreateGameHandler(db))
+	r.GET("/game/:id", ShowGameHandler(db))
 
 	n := negroni.New()
 	n.Use(cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE"},
+		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
 	}))
-	n.Use(AuthenticateMiddleware(logger, db, []byte(c.Secret)))
+	n.Use(NewContextMiddleware(Context{
+		Logger: logger,
+	}))
+	n.Use(AuthenticateMiddleware(logger, db, []byte(c.Secret), []string{
+		"/login",
+		"/authenticate",
+	}))
 	n.UseHandler(r)
 
 	s := &http.Server{

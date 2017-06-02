@@ -10,18 +10,21 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
-func AuthenticateHandler(logger log.Logger, db *sqlx.DB, secret []byte) httprouter.Handle {
-	logger = log.With(logger, "handler", "authenticate")
-
+func AuthenticateHandler(db *sqlx.DB, secret []byte) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-		_, err := token.ParseHS256(r.Header.Get("token"), secret)
+		logger := log.With(Ctx(r).Logger, "handler", "authenticate")
+
+		t := r.Header.Get("token")
+		_, err := token.ParseHS256(t, secret)
 		if err != nil {
+			logger.Log("lvl", "err", "msg", "invalid token", "err", err.Error(), "token", t)
 			api.Write(w, map[string]interface{}{
 				"authenticated": false,
 			})
 			return
 		}
 
+		logger.Log("lvl", "err", "msg", "valid token", "token", t)
 		api.Write(w, map[string]interface{}{
 			"authenticated": true,
 		})
