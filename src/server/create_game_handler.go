@@ -46,7 +46,7 @@ func CreateGameHandler(db *sqlx.DB) httprouter.Handle {
 			return
 		}
 
-		logger.Log("lvl", "error", "msg", "created new game")
+		logger.Log("lvl", "info", "msg", "created new game")
 		api.Write(w, map[string]interface{}{
 			"game": id,
 		})

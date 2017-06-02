@@ -18,14 +18,14 @@ func AuthenticateHandler(db *sqlx.DB, secret []byte) httprouter.Handle {
 		t := r.Header.Get("token")
 		_, err := token.ParseHS256(t, secret)
 		if err != nil {
-			logger.Log("lvl", "err", "msg", "invalid token", "err", err.Error(), "token", t)
+			logger.Log("lvl", "error", "msg", "invalid token", "err", err.Error(), "token", t)
 			api.Write(w, map[string]interface{}{
 				"authenticated": false,
 			})
 			return
 		}
 
-		logger.Log("lvl", "err", "msg", "valid token", "token", t)
+		logger.Log("lvl", "info", "msg", "valid token", "token", t)
 		api.Write(w, map[string]interface{}{
 			"authenticated": true,
 		})
