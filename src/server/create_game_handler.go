@@ -3,6 +3,7 @@ package main
 import (
 	"api"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"time"
 
@@ -19,6 +20,12 @@ func CreateGameHandler(db *sqlx.DB) httprouter.Handle {
 		err := json.NewDecoder(r.Body).Decode(&game)
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "parsing payload", "err", err.Error())
+			api.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
+
+		if game.Players < 5 || game.Players > 10 {
+			logger.Log("lvl", "error", "msg", "invalid number of players", "err", errors.New("invalid number of players (5 =< x <= 10)").Error())
 			api.WriteError(w, http.StatusBadRequest, err)
 			return
 		}
