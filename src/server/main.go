@@ -54,6 +54,7 @@ func main() {
 	r.POST("/game", CreateGameHandler(db))
 	r.GET("/game/:id", ShowGameHandler(db))
 	r.POST("/game/:id/join", JoinGameHandler(db))
+	r.GET("/game/:id/players", ShowGamePlayersHandler(db))
 
 	n := negroni.New()
 	n.Use(cors.New(cors.Options{

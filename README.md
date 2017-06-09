@@ -127,7 +127,7 @@ multi-tasking clients.
 POST /game/1/join
 
 {
-	"name": "foo"
+	"name": "r"
 }
 ```
 
@@ -137,4 +137,23 @@ POST /game/1/join
 {
 	"player": 1
 }
+```
+
+#### Get the list of players in a game
+
+```
+GET /game/1/players
+```
+
+```
+200 OK
+
+[
+	{
+		"id": 1,
+		"user_id": 1,
+		"name": "r",
+		"joined_at": "2017-06-09T15:47:14.693196375+02:00"
+	}
+]
 ```

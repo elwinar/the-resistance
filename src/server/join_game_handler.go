@@ -44,7 +44,7 @@ func JoinGameHandler(db *sqlx.DB) httprouter.Handle {
 		}
 
 		var count int
-		err = db.Get(&count, "SELECT count(*) FROM game_joined WHERE game_id = ?", game.ID)
+		err = db.Get(&count, "SELECT count(*) FROM player WHERE game_id = ?", game.ID)
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "counting players who joined game", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)
@@ -65,7 +65,7 @@ func JoinGameHandler(db *sqlx.DB) httprouter.Handle {
 			return
 		}
 
-		res, err := db.Exec("INSERT INTO player (game_id, player_id, name, joined_at) VALUES (?, ?, ?)", game.ID, ctx.UserID, req.Name, time.Now())
+		res, err := db.Exec("INSERT INTO player (game_id, user_id, name, joined_at) VALUES (?, ?, ?, ?)", game.ID, ctx.UserID, req.Name, time.Now())
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "joining game", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)

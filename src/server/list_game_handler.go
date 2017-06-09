@@ -15,7 +15,15 @@ func ListGameHandler(db *sqlx.DB) httprouter.Handle {
 		logger := log.With(ctx.Logger, "handler", "list games")
 
 		var games []Game
-		err := db.Select(&games, "SELECT g.id, g.name, g.players, COUNT(p.id) AS joined, g.created_at, g.started_at, g.finished_at FROM game AS g LEFT OUTER JOIN player AS p ON g.id = p.game_id")
+		err := db.Select(&games, `
+			SELECT g.id, g.name, g.players, COALESCE(p.joined, 0) AS joined, g.created_at, g.started_at, g.finished_at 
+			FROM game AS g 
+			LEFT OUTER JOIN (
+				SELECT game_id, COUNT(*) AS joined
+				FROM player 
+				GROUP BY game_id
+			) AS p ON g.id = p.game_id
+		`)
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "retrieving games list", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)
