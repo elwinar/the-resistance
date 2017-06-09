@@ -157,3 +157,25 @@ GET /game/1/players
 	}
 ]
 ```
+
+#### Get the list of games joined by the current user
+
+```
+GET /joined
+```
+
+```
+200 OK
+
+[
+	{
+		"id": 1,
+		"name": "foo",
+		"players": 5,
+		"joined": 1,
+		"created_at": "2017-06-09T15:35:30.207083065+02:00",
+		"started_at": null,
+		"finished_at": null
+	}
+]
+```

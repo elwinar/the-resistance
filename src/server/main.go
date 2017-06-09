@@ -51,6 +51,7 @@ func main() {
 	r.POST("/login", LoginHandler(db, []byte(c.Secret), c.TokenTTL))
 	r.POST("/authenticate", AuthenticateHandler(db, []byte(c.Secret)))
 	r.GET("/game", ListGameHandler(db))
+	r.GET("/joined", ListGameJoinedHandler(db))
 	r.POST("/game", CreateGameHandler(db))
 	r.GET("/game/:id", ShowGameHandler(db))
 	r.POST("/game/:id/join", JoinGameHandler(db))

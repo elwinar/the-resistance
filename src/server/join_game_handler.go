@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -66,6 +67,11 @@ func JoinGameHandler(db *sqlx.DB) httprouter.Handle {
 		}
 
 		res, err := db.Exec("INSERT INTO player (game_id, user_id, name, joined_at) VALUES (?, ?, ?, ?)", game.ID, ctx.UserID, req.Name, time.Now())
+		if err != nil && strings.HasPrefix(err.Error(), "UNIQUE") {
+			logger.Log("lvl", "error", "msg", "joining game", "err", err.Error())
+			api.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "joining game", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)
