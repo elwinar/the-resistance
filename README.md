@@ -16,8 +16,8 @@ requests later.
 POST /login
 
 {
-    "login": "user",
-    "password": "password"
+	"login": "user",
+	"password": "password"
 }
 ```
 
@@ -25,7 +25,7 @@ POST /login
 200 OK
 
 {
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0OTQ2MDI5NDgsInVzZXIiOiJlbHdpbmFyIn0=.xk_7Dz5wBhxNn_Eb08JVhSoXmIos74-A6bGBC5PK1B4="
+	"token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0OTQ2MDI5NDgsInVzZXIiOiJlbHdpbmFyIn0=.xk_7Dz5wBhxNn_Eb08JVhSoXmIos74-A6bGBC5PK1B4="
 }
 ```
 
@@ -44,15 +44,17 @@ token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE0OTQ2MDI5NDgsInVzZXIiOiJl
 200 OK
 
 {
-    "authenticated": true
+	"authenticated": true
 }
 ```
 
 ### Game
 
-Games are the primary entity of the API. A game is simply an ID, with some dates to indicated if the game started, finished, etc.
+Games are the primary entity of the API. A game is simply an ID, with some
+dates to indicated if the game started, finished, etc.
 
-A game isn't started until the `started_at` attribute is non-nul, and once started it is finished when the `finished_at` attribute is non-nul.
+A game isn't started until the `started_at` attribute is non-nul, and once
+started it is finished when the `finished_at` attribute is non-nul.
 
 #### List the games
 
@@ -64,14 +66,15 @@ GET /game
 200 OK
 
 [
-    {
-        "id": 1,
-	"name": "foo",
-	"players": 5,
-        "created_at": "2017-05-19T15:30:53.311021359+02:00",
-        "started_at": null,
-        "finished_at": null
-    }
+	{
+		"id": 1,
+		"name": "foo",
+		"players": 5,
+		"joined": 3,
+		"created_at": "2017-05-19T15:30:53.311021359+02:00",
+		"started_at": null,
+		"finished_at": null
+	}
 ]
 ```
 
@@ -85,14 +88,16 @@ GET /game/1
 200 OK
 
 {
-    "id": 1,
-    "name": "foo",
-    "players": 5,
-    "created_at": "2017-05-19T15:30:53.311021359+02:00",
-    "started_at": null,
-    "finished_at": null
+	"id": 1,
+	"name": "foo",
+	"players": 5,
+	"joined": 3,
+	"created_at": "2017-05-19T15:30:53.311021359+02:00",
+	"started_at": null,
+	"finished_at": null
 }
 ```
+
 #### Create a new game.
 
 ```
@@ -108,20 +113,28 @@ POST /game
 200 OK
 
 {
-    "game": 1
+	"game": 1
 }
 ```
 
 #### Join a game
 
-Join a game with the current connected user. It is actually possible to join multiple games at the same time, allowing multi-tasking clients.
+Join a game with the current connected user and specified username. It is
+actually possible to join multiple games at the same time, allowing
+multi-tasking clients.
 
 ```
 POST /game/1/join
+
+{
+	"name": "foo"
+}
 ```
 
 ```
 200 OK
 
-"ok"
+{
+	"player": 1
+}
 ```

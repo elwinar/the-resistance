@@ -25,7 +25,7 @@ func ShowGameHandler(db *sqlx.DB) httprouter.Handle {
 		logger = log.With(logger, "game", id)
 
 		var game Game
-		err = db.Get(&game, "SELECT id, name, players, created_at, started_at, finished_at FROM game WHERE id = ?", id)
+		err = db.Get(&game, "SELECT g.id, g.name, g.players, COUNT(p.id) AS joined, g.created_at, g.started_at, g.finished_at FROM game AS g LEFT OUTER JOIN player AS p ON g.id = p.game_id WHERE g.id = ?", id)
 		if err == sql.ErrNoRows {
 			logger.Log("lvl", "error", "msg", "game not found", "err", err.Error())
 			api.WriteError(w, http.StatusNotFound, err)

@@ -13,6 +13,10 @@ import (
 	"github.com/julienschmidt/httprouter"
 )
 
+type JoinRequest struct {
+	Name string `json:"name"`
+}
+
 func JoinGameHandler(db *sqlx.DB) httprouter.Handle {
 	return func(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		ctx := Ctx(r)
@@ -53,14 +57,31 @@ func JoinGameHandler(db *sqlx.DB) httprouter.Handle {
 			return
 		}
 
-		_, err = db.Exec("INSERT INTO game_joined (game_id, player_id, joined_at) VALUES (?, ?, ?)", game.ID, ctx.UserID, time.Now())
+		var req JoinRequest
+		err = api.Read(r, &req)
+		if err != nil {
+			logger.Log("lvl", "error", "msg", "reading request", "err", err.Error())
+			api.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
+
+		res, err := db.Exec("INSERT INTO player (game_id, player_id, name, joined_at) VALUES (?, ?, ?)", game.ID, ctx.UserID, req.Name, time.Now())
 		if err != nil {
 			logger.Log("lvl", "error", "msg", "joining game", "err", err.Error())
 			api.WriteError(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		logger.Log("lvl", "info", "msg", "joined game", "game", game.ID)
-		api.Write(w, "ok")
+		player, err := res.LastInsertId()
+		if err != nil {
+			logger.Log("lvl", "error", "msg", "retrieving player id", "err", err.Error())
+			api.WriteError(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		logger.Log("lvl", "info", "msg", "joined game", "game", game.ID, "player", player)
+		api.Write(w, map[string]interface{}{
+			"player": player,
+		})
 	}
 }
