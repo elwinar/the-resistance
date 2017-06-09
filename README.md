@@ -84,7 +84,6 @@ GET /game/1
 ```
 200 OK
 
-
 {
     "id": 1,
     "name": "foo",
@@ -111,4 +110,18 @@ POST /game
 {
     "game": 1
 }
+```
+
+#### Join a game
+
+Join a game with the current connected user. It is actually possible to join multiple games at the same time, allowing multi-tasking clients.
+
+```
+POST /game/1/join
+```
+
+```
+200 OK
+
+"ok"
 ```
